@@ -1,10 +1,13 @@
+// 1. Load environment variables at the absolute top
+require("dotenv").config();
+
 const express = require("express");
 const path = require("path");
 const connectDB = require("./config/db");
 
 const app = express();
 
-// Initialize MongoDB Connection
+// Initialize MongoDB Connection (Now safely using your loaded environment variables)
 connectDB();
 
 // Setup EJS Template Engine
