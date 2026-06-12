@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FoodExpress - Home</title>
+    <link rel="stylesheet" href="/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="logo">Food<span>Express</span></div>
+        <nav>
+            <ul class="nav-links">
+                <li><a href="/" class="active">Home</a></li>
+                <li><a href="/cart">Cart</a></li>
+                <li><a href="/orders">Orders</a></li>
+                <li><a href="#" class="login-btn">Login</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="container">
+        <section class="hero">
+            <h2>Delicious Food Delivered To Your Door</h2>
+            <p>Order your favorite meals anytime, anywhere.</p>
+            <div class="search-container">
+                <input type="text" placeholder="Search food items, cuisines...">
+                <button>Search</button>
+            </div>
+        </section>
+
+        <section class="menu-section">
+            <h3>Popular Foods</h3>
+            <div class="food-gallery">
+                <% foods.forEach(food => { %>
+                    <div class="food-card">
+                        <div class="food-img-placeholder">🍔</div>
+                        <div class="food-info">
+                            <h4><%= food.name %></h4>
+                            <p class="desc"><%= food.description %></p>
+                            <div class="card-footer">
+                                <span class="price">Rs. <%= food.price %></span>
+                                <button class="add-to-cart-btn" data-name="<%= food.name %>" data-price="<%= food.price %>">Add To Cart</button>
+                            </div>
+                        </div>
+                    </div>
+                <% }) %>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const cartButtons = document.querySelectorAll('.add-to-cart-btn');
+
+        cartButtons.forEach(button => {
+            button.addEventListener('click', async () => {
+                const name = button.getAttribute('data-name');
+                const price = button.getAttribute('data-price');
+
+                try {
+                    const response = await fetch('/api/cart', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ name, price })
+                    });
+                    
+                    const result = await response.json();
+                    if(result.success) {
+                        alert(`Successfully saved "${name}" straight into MongoDB!`);
+                    } else {
+                        alert("Database write validation failed.");
+                    }
+                } catch (error) {
+                    console.error("Transmission error:", error);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

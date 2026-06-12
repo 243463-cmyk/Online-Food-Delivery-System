@@ -1,15 +1,18 @@
 const mongoose = require("mongoose");
-require("dotenv").config();
 
-const connectDB = async () => {
-    try {
-        const conn = await mongoose.connect(process.env.MONGO_URI || "mongodb://127.0.0.1:27017/foodDelivery");
-        console.log(`MongoDB Connected: ${conn.connection.host}`);
-    } catch (error) {
-        console.error(`Database Connection Error: ${error.message}`);
-        process.exit(1);
-    }
+const connectDB = () => {
+    // 1. Grab URI from .env file, or fall back to your specific 'online_food_delivery' local path
+    const dbURI = process.env.MONGO_URI || "mongodb://127.0.0.1:27017/online_food_delivery";
+
+    // 2. Establish connection using your .then() / .catch() format
+    mongoose.connect(dbURI)
+        .then(() => {
+            console.log("MongoDB Connected Successfully");
+        })
+        .catch(err => {
+            console.error("Database Connection Error:", err);
+            process.exit(1); // Safely shuts down the process if connection fails
+        });
 };
 
-// This exports the function so app.js can use it
 module.exports = connectDB;
